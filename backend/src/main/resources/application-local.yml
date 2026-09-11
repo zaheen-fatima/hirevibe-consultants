@@ -1,0 +1,74 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
+app:
+  frontend:
+    url: ${APP_FRONTEND_URL}
+
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:${APP_FRONTEND_URL}}
+
+  mail:
+    hr-recipient: ${MAIL_HR_RECIPIENT}
+
+  storage:
+    provider: ${STORAGE_PROVIDER}
+    local-directory: ${STORAGE_LOCAL_DIRECTORY}
+    max-file-size: ${STORAGE_MAX_FILE_SIZE}
+    allowed-resume-extensions:
+      - pdf
+      - doc
+      - docx
+
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME}
+    api-key: ${CLOUDINARY_API_KEY}
+    api-secret: ${CLOUDINARY_API_SECRET}
+
+    root-folder: ${CLOUDINARY_ROOT_FOLDER:hirevibe}
+    resume-folder: ${CLOUDINARY_RESUME_FOLDER:resumes}
+    article-image-folder: ${CLOUDINARY_ARTICLE_IMAGE_FOLDER:article-images}
+    video-thumbnail-folder: ${CLOUDINARY_VIDEO_THUMBNAIL_FOLDER:video-thumbnails}
+    general-folder: ${CLOUDINARY_GENERAL_FOLDER:general}
+
+    signed-url-expiration-seconds: ${CLOUDINARY_SIGNED_URL_EXPIRATION_SECONDS:900}
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha

@@ -1,0 +1,23 @@
+INSERT INTO permissions (name)
+SELECT 'PERMISSION_READ'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM permissions WHERE name = 'PERMISSION_READ'
+);
+
+INSERT INTO permissions (name)
+SELECT 'PERMISSION_CREATE'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM permissions WHERE name = 'PERMISSION_CREATE'
+);
+
+INSERT INTO permissions (name)
+SELECT 'PERMISSION_UPDATE'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM permissions WHERE name = 'PERMISSION_UPDATE'
+);
+
+INSERT INTO permissions (name)
+SELECT 'PERMISSION_DELETE'
+    WHERE NOT EXISTS (
+    SELECT 1 FROM permissions WHERE name = 'PERMISSION_DELETE'
+);

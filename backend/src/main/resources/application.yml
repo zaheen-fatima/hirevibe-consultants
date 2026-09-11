@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: hirevibe-backend
+
+  config:
+    import: optional:file:./.env[.properties]
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: ${JWT_EXPIRATION:1800000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:2592000000}
+    refresh-cleanup-interval: ${JWT_REFRESH_CLEANUP_INTERVAL:3600000}
+
+server:
+  port: ${SERVER_PORT:8080}
+
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+  compression:
+    enabled: true
+    mime-types: >
+      text/html,
+      text/xml,
+      text/plain,
+      text/css,
+      text/javascript,
+      application/javascript,
+      application/json,
+      application/xml,
+      application/xhtml+xml,
+      image/svg+xml
+    min-response-size: 1024
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+  endpoint:
+    health:
+      show-details: never
+
+info:
+  app:
+    name: HireVibe Backend
+    description: Enterprise recruitment and consultancy platform backend
+    version: 1.0.0
+
+app:
+  cors:
+    allowed-origins: ${APP_CORS_ALLOWED_ORIGINS:${APP_FRONTEND_URL}}
+
+  pagination:
+    default-page-size: 10
+    max-page-size: 100
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    operations-sorter: method
+    tags-sorter: alpha
