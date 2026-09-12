@@ -209,6 +209,9 @@ public class CloudinaryStorageService
             case VIDEO_THUMBNAILS ->
                     properties.getVideoThumbnailFolder();
 
+            case VIDEO_FILES ->
+                    properties.getVideoFolder();
+
             case GENERAL ->
                     properties.getGeneralFolder();
         };
@@ -225,6 +228,9 @@ public class CloudinaryStorageService
 
             case ARTICLE_IMAGES, VIDEO_THUMBNAILS ->
                     StorageResourceType.IMAGE;
+
+            case VIDEO_FILES ->
+                    StorageResourceType.VIDEO;
         };
     }
 
@@ -239,6 +245,7 @@ public class CloudinaryStorageService
 
             case ARTICLE_IMAGES,
                  VIDEO_THUMBNAILS,
+                 VIDEO_FILES,
                  GENERAL ->
                     DELIVERY_TYPE_UPLOAD;
         };

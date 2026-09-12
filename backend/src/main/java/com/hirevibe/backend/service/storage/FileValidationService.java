@@ -28,7 +28,12 @@ public class FileValidationService {
             );
         }
 
-        if (file.getSize() > properties.getMaxFileSize()) {
+        long maxFileSize =
+                category == StorageCategory.RESUMES
+                        ? properties.getMaxFileSize()
+                        : properties.getMediaMaxFileSize();
+
+        if (file.getSize() > maxFileSize) {
             throw new IllegalArgumentException(
                     "Uploaded file exceeds the configured maximum size"
             );

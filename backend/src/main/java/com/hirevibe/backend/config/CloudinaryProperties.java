@@ -22,6 +22,7 @@ public class CloudinaryProperties {
     private String articleImageFolder;
 
     private String videoThumbnailFolder;
+    private String videoFolder;
 
     private String generalFolder;
 

@@ -203,6 +203,9 @@ public class LocalStorageService
 
             case ARTICLE_IMAGES, VIDEO_THUMBNAILS ->
                     StorageResourceType.IMAGE;
+
+            case VIDEO_FILES ->
+                    StorageResourceType.VIDEO;
         };
     }
 }

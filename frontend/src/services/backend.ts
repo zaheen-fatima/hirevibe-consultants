@@ -95,6 +95,34 @@ export const videosApi = {
   remove: async (id: number) => { await api.delete(`/videos/${id}`); },
 };
 
+export type UploadResponse = {
+  identifier: string;
+  url: string;
+  resourceType: 'IMAGE' | 'RAW' | 'VIDEO';
+  format: string | null;
+  size: number;
+};
+
+export const uploadsApi = {
+  articleImage: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return (await api.post<UploadResponse>('/uploads/article-image', formData, { headers: { 'Content-Type': 'multipart/form-data' } })).data;
+  },
+
+  video: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return (await api.post<UploadResponse>('/uploads/video', formData, { headers: { 'Content-Type': 'multipart/form-data' } })).data;
+  },
+
+  videoThumbnail: async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return (await api.post<UploadResponse>('/uploads/video-thumbnail', formData, { headers: { 'Content-Type': 'multipart/form-data' } })).data;
+  },
+};
+
 export const usersApi = {
   list: async (params?: QueryParams) => (await api.get<PageResponse<User>>('/users', { params })).data,
   get: async (id: number) => (await api.get<User>(`/users/${id}`)).data,

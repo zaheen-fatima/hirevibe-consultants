@@ -16,5 +16,7 @@ public class StorageProperties {
 
     private long maxFileSize;
 
+    private long mediaMaxFileSize;
+
     private String[] allowedResumeExtensions;
 }

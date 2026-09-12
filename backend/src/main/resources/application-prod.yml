@@ -1,4 +1,9 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: ${STORAGE_MEDIA_MAX_FILE_SIZE:104857600}
+      max-request-size: ${STORAGE_MEDIA_MAX_FILE_SIZE:104857600}
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -44,6 +49,7 @@ app:
     provider: ${STORAGE_PROVIDER}
     local-directory: ${STORAGE_LOCAL_DIRECTORY}
     max-file-size: ${STORAGE_MAX_FILE_SIZE}
+    media-max-file-size: ${STORAGE_MEDIA_MAX_FILE_SIZE:104857600}
     allowed-resume-extensions:
       - pdf
       - doc
@@ -57,6 +63,7 @@ app:
     resume-folder: ${CLOUDINARY_RESUME_FOLDER}
     article-image-folder: ${CLOUDINARY_ARTICLE_IMAGE_FOLDER}
     video-thumbnail-folder: ${CLOUDINARY_VIDEO_THUMBNAIL_FOLDER}
+    video-folder: ${CLOUDINARY_VIDEO_FOLDER:videos}
     general-folder: ${CLOUDINARY_GENERAL_FOLDER}
     signed-url-expiration-seconds: ${CLOUDINARY_SIGNED_URL_EXPIRATION_SECONDS}
 

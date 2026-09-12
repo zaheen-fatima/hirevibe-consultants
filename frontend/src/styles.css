@@ -6,6 +6,22 @@
   --hv-gold: #c89b3c;
   --hv-gold-soft: #e2be70;
   --hv-cream: #f7f3ea;
+
+  /* MUI palette aliases used by the global stylesheet */
+  --mui-palette-background-default: #FAFAF8;
+  --mui-palette-background-paper: #FFFFFF;
+  --mui-palette-text-primary: #111827;
+  --mui-palette-text-secondary: #5D6877;
+  --mui-palette-divider: rgba(16, 42, 67, .13);
+}
+
+[data-theme='dark'] {
+  /* Keep external CSS palette references synchronized with theme.ts */
+  --mui-palette-background-default: #06090D;
+  --mui-palette-background-paper: #0D1117;
+  --mui-palette-text-primary: #F4F4F0;
+  --mui-palette-text-secondary: #AAB3BF;
+  --mui-palette-divider: rgba(255, 255, 255, .10);
 }
 
 html, body, #root { min-height: 100%; }
@@ -913,41 +929,7 @@ body {
   }
 }
 
-@media (max-width: 600px) {
-  .hv-footer {
-    margin-top: 58px;
-  }
 
-  .hv-footer-grid {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 52px 0 28px;
-  }
-
-  .hv-footer-grid > :first-child {
-    grid-column: auto;
-  }
-
-  .hv-footer-logo {
-    width: 172px;
-    height: 66px;
-  }
-
-  .hv-footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-  }
-
-  .hv-footer-bottom > div {
-    width: 100%;
-  }
-
-  .hv-footer-social {
-    width: 40px;
-    height: 40px;
-  }
-}
 /* Footer */
 .hv-footer {
   margin-top: 82px;
@@ -1178,4 +1160,763 @@ body {
   border-top: 1px solid var(--mui-palette-divider);
   position: relative;
   z-index: 1;
+}
+@media (max-width: 600px) {
+  .hv-footer {
+    margin-top: 58px;
+  }
+
+  .hv-footer-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding: 52px 0 28px;
+  }
+
+  .hv-footer-grid > :first-child {
+    grid-column: auto;
+  }
+
+  .hv-footer-logo {
+    width: 172px;
+    height: 66px;
+  }
+
+  .hv-footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .hv-footer-bottom > div {
+    width: 100%;
+  }
+
+  .hv-footer-social {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+
+/* ================================================================
+   HIREVIBE FINAL LIGHT-THEME + RESPONSIVE POLISH
+   CSS ONLY — preserves existing markup, content and layout structure
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   Global overflow protection
+   ---------------------------------------------------------------- */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-width: 0;
+}
+
+#root,
+.hv-public-shell,
+.hv-public-shell main,
+.hv-public-shell footer,
+.hv-public-shell header {
+  min-width: 0;
+  max-width: 100%;
+}
+
+
+/* ----------------------------------------------------------------
+   Light theme — premium enterprise surface system
+   Keeps the existing HireVibe green / blue / warm palette but gives
+   the light theme considerably more depth than plain white.
+   ---------------------------------------------------------------- */
+[data-theme='light'] .hv-public-shell {
+  background:
+          radial-gradient(
+                  900px 520px at -8% 8%,
+                  rgba(22, 122, 75, .055),
+                  transparent 62%
+          ),
+          radial-gradient(
+                  820px 520px at 108% 34%,
+                  rgba(35, 77, 112, .045),
+                  transparent 60%
+          ),
+          linear-gradient(
+                  180deg,
+                  #fbfcfb 0%,
+                  #f7f9f8 42%,
+                  #fafbf9 100%
+          );
+}
+
+
+/* ----------------------------------------------------------------
+   Light header
+   ---------------------------------------------------------------- */
+[data-theme='light'] .hv-public-nav {
+  background:
+          linear-gradient(
+                  180deg,
+                  rgba(255,255,255,.94),
+                  rgba(249,251,250,.88)
+          ) !important;
+
+  border-bottom-color:
+          rgba(24,59,90,.10) !important;
+
+  box-shadow:
+          0 1px 0 rgba(255,255,255,.85),
+          0 8px 30px rgba(18,35,49,.045);
+}
+
+[data-theme='light'] .hv-public-nav-scrolled {
+  background:
+          rgba(255,255,255,.94) !important;
+
+  border-bottom-color:
+          rgba(24,59,90,.13) !important;
+
+  box-shadow:
+          0 10px 35px rgba(18,35,49,.075);
+}
+
+[data-theme='light'] .hv-nav-link {
+  color:
+          #172234 !important;
+}
+
+[data-theme='light'] .hv-nav-link:hover,
+[data-theme='light'] .hv-nav-link.is-active {
+  color:
+          var(--hv-accent) !important;
+}
+
+
+/* ----------------------------------------------------------------
+   Header icon buttons
+   Fixes the mobile menu / theme-toggle visibility.
+   ---------------------------------------------------------------- */
+.hv-public-nav .hv-icon-button {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  color: var(--mui-palette-text-primary) !important;
+
+  border: 1px solid
+  color-mix(
+          in srgb,
+          var(--mui-palette-text-primary) 12%,
+          transparent
+  ) !important;
+
+  background:
+          color-mix(
+                  in srgb,
+                  var(--mui-palette-background-paper) 88%,
+                  transparent
+          ) !important;
+
+  transition:
+          color .22s ease,
+          background .22s ease,
+          border-color .22s ease,
+          transform .22s ease,
+          box-shadow .22s ease !important;
+}
+
+.hv-public-nav .hv-icon-button:hover {
+  color: var(--hv-accent) !important;
+
+  background:
+          color-mix(
+                  in srgb,
+                  var(--hv-accent) 7%,
+                  var(--mui-palette-background-paper)
+          ) !important;
+
+  border-color:
+          color-mix(
+                  in srgb,
+                  var(--hv-accent) 28%,
+                  var(--mui-palette-divider)
+          ) !important;
+
+  transform: translateY(-1px);
+  box-shadow:
+          0 7px 20px rgba(18,35,49,.08);
+}
+
+.hv-public-nav .hv-icon-button svg {
+  width: 20px !important;
+  height: 20px !important;
+  stroke-width: 1.9 !important;
+}
+
+
+/* ----------------------------------------------------------------
+   Mobile drawer
+   ---------------------------------------------------------------- */
+.hv-mobile-drawer {
+  width: min(390px, 92vw) !important;
+  max-width: 92vw !important;
+
+  background:
+          linear-gradient(
+                  160deg,
+                  rgba(255,255,255,.98),
+                  rgba(246,250,248,.98)
+          ) !important;
+
+  color: var(--mui-palette-text-primary) !important;
+
+  border-left:
+          1px solid rgba(24,59,90,.10) !important;
+
+  box-shadow:
+          -24px 0 70px rgba(10,25,36,.16) !important;
+}
+
+[data-theme='dark'] .hv-mobile-drawer {
+  background:
+          linear-gradient(
+                  160deg,
+                  #0d1117,
+                  #0a0f14
+          ) !important;
+
+  border-left-color:
+          rgba(255,255,255,.09) !important;
+
+  box-shadow:
+          -24px 0 70px rgba(0,0,0,.38) !important;
+}
+
+.hv-mobile-drawer .MuiButton-root {
+  justify-content: flex-start !important;
+  width: 100% !important;
+  min-height: 48px !important;
+  padding-inline: 14px !important;
+  border-radius: 12px !important;
+
+  color: var(--mui-palette-text-primary) !important;
+
+  font-weight: 500 !important;
+  text-align: left !important;
+
+  transition:
+          background .2s ease,
+          color .2s ease,
+          transform .2s ease !important;
+}
+
+.hv-mobile-drawer .MuiButton-root:hover {
+  background:
+          color-mix(
+                  in srgb,
+                  var(--hv-accent) 8%,
+                  transparent
+          ) !important;
+
+  color: var(--hv-accent) !important;
+  transform: translateX(3px);
+}
+
+.hv-mobile-drawer .MuiIconButton-root {
+  color: var(--mui-palette-text-primary) !important;
+}
+
+
+/* ----------------------------------------------------------------
+   Light sections — controlled tonal separation
+   ---------------------------------------------------------------- */
+[data-theme='light'] .hv-journey-section {
+  background:
+          linear-gradient(
+                  180deg,
+                  rgba(255,255,255,.12),
+                  rgba(239,247,243,.68)
+          ) !important;
+}
+
+[data-theme='light'] .hv-services-section {
+  background:
+          linear-gradient(
+                  180deg,
+                  #f8faf9 0%,
+                  #f2f7f4 100%
+          ) !important;
+}
+
+[data-theme='light'] .hv-roles-section {
+  background:
+          linear-gradient(
+                  180deg,
+                  #fafbf9 0%,
+                  #f4f8f6 100%
+          ) !important;
+}
+
+[data-theme='light'] .hv-insights-section {
+  background:
+          linear-gradient(
+                  180deg,
+                  #f7faf8 0%,
+                  #fbfcfb 100%
+          ) !important;
+}
+
+[data-theme='light'] .hv-statement-section {
+  background:
+          radial-gradient(
+                  700px 400px at 50% 0%,
+                  rgba(22,122,75,.055),
+                  transparent 70%
+          ),
+          linear-gradient(
+                  180deg,
+                  #fbfcfb,
+                  #f1f6f3
+          ) !important;
+}
+
+
+/* ----------------------------------------------------------------
+   Enterprise light cards
+   ---------------------------------------------------------------- */
+[data-theme='light']
+.hv-journey-card,
+[data-theme='light']
+.hv-process-card,
+[data-theme='light']
+.hv-role-card,
+[data-theme='light']
+.hv-service-card,
+[data-theme='light']
+.hv-content-tile,
+[data-theme='light']
+.hv-apply-side-card {
+  background:
+          linear-gradient(
+                  145deg,
+                  rgba(255,255,255,.98) 0%,
+                  rgba(247,250,248,.94) 100%
+          ) !important;
+
+  border-color:
+          rgba(24,59,90,.105) !important;
+
+  box-shadow:
+          0 8px 28px rgba(18,35,49,.045),
+          0 1px 2px rgba(18,35,49,.035) !important;
+}
+
+[data-theme='light']
+.hv-journey-card:hover,
+[data-theme='light']
+.hv-process-card:hover,
+[data-theme='light']
+.hv-role-card:hover,
+[data-theme='light']
+.hv-service-card:hover,
+[data-theme='light']
+.hv-content-tile:hover,
+[data-theme='light']
+.hv-apply-side-card:hover {
+  border-color:
+          rgba(22,122,75,.24) !important;
+
+  box-shadow:
+          0 22px 55px rgba(18,35,49,.095),
+          0 3px 8px rgba(18,35,49,.045) !important;
+}
+
+
+/* ----------------------------------------------------------------
+   Light search / form surfaces
+   ---------------------------------------------------------------- */
+[data-theme='light'] .hv-search-panel {
+  background:
+          rgba(255,255,255,.88) !important;
+
+  border-color:
+          rgba(24,59,90,.10) !important;
+
+  box-shadow:
+          0 18px 55px rgba(18,35,49,.065) !important;
+}
+
+
+/* ----------------------------------------------------------------
+   Page heroes
+   ---------------------------------------------------------------- */
+[data-theme='light'] .hv-page-hero {
+  background:
+          radial-gradient(
+                  650px 360px at 90% 5%,
+                  rgba(22,122,75,.075),
+                  transparent 70%
+          ),
+          radial-gradient(
+                  560px 360px at 5% 100%,
+                  rgba(35,77,112,.055),
+                  transparent 72%
+          ),
+          linear-gradient(
+                  180deg,
+                  #fbfcfb,
+                  #f4f8f6
+          ) !important;
+}
+
+[data-theme='light'] .hv-page-hero::after {
+  opacity: .55;
+}
+
+
+/* ----------------------------------------------------------------
+   Footer — this is the major mobile correction
+   ---------------------------------------------------------------- */
+.hv-footer {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden !important;
+}
+
+.hv-footer > .MuiContainer-root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.hv-footer-grid {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.hv-footer-grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.hv-footer-grid p,
+.hv-footer-grid a,
+.hv-footer-contact-link,
+.hv-footer-link,
+.hv-footer-small-link {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+
+/* ----------------------------------------------------------------
+   Footer light theme
+   ---------------------------------------------------------------- */
+[data-theme='light'] .hv-footer {
+  background:
+          radial-gradient(
+                  620px 360px at 4% 15%,
+                  rgba(22,122,75,.055),
+                  transparent 68%
+          ),
+          radial-gradient(
+                  600px 360px at 96% 78%,
+                  rgba(35,77,112,.045),
+                  transparent 68%
+          ),
+          linear-gradient(
+                  180deg,
+                  #f7faf8,
+                  #eef4f1
+          ) !important;
+
+  border-top-color:
+          rgba(24,59,90,.11) !important;
+}
+
+[data-theme='light'] .hv-footer-social {
+  color: #172234 !important;
+
+  background:
+          linear-gradient(
+                  145deg,
+                  #ffffff,
+                  #f1f6f3
+          ) !important;
+
+  border-color:
+          rgba(24,59,90,.13) !important;
+
+  box-shadow:
+          0 7px 22px rgba(18,35,49,.065) !important;
+}
+
+[data-theme='light'] .hv-footer-social:hover {
+  color: #ffffff !important;
+  background: var(--hv-navy) !important;
+  border-color: var(--hv-navy) !important;
+}
+
+[data-theme='light'] .hv-footer-review-card {
+  background:
+          linear-gradient(
+                  145deg,
+                  rgba(255,255,255,.94),
+                  rgba(245,249,247,.92)
+          ) !important;
+
+  border-color:
+          rgba(24,59,90,.10) !important;
+
+  box-shadow:
+          0 12px 34px rgba(18,35,49,.055) !important;
+}
+
+
+/* ----------------------------------------------------------------
+   Footer typography / spacing protection
+   ---------------------------------------------------------------- */
+.hv-footer-brandline {
+  max-width: 100%;
+}
+
+.hv-footer-bottom {
+  min-width: 0;
+}
+
+.hv-footer-bottom > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+
+/* ----------------------------------------------------------------
+   Tablet
+   ---------------------------------------------------------------- */
+@media (max-width: 1000px) {
+  .hv-footer-grid {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr) !important;
+
+    gap: 34px 28px !important;
+  }
+
+  .hv-footer-grid > :first-child {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+
+/* ----------------------------------------------------------------
+   Mobile — prevents the right-side white/empty strip
+   ---------------------------------------------------------------- */
+@media (max-width: 600px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .hv-public-shell {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .hv-public-nav {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hv-public-nav > .MuiContainer-root,
+  .hv-footer > .MuiContainer-root {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .hv-public-nav .MuiContainer-root {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .hv-footer .MuiContainer-root {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+
+  /* Keep the existing one-column mobile footer structure,
+     but make every column physically fit the viewport. */
+  .hv-footer-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 30px !important;
+    padding: 48px 0 26px !important;
+  }
+
+  .hv-footer-grid > * {
+    grid-column: auto !important;
+    width: 100%;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .hv-footer-grid p {
+    max-width: 100% !important;
+  }
+
+  .hv-footer-grid .MuiStack-root {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .hv-footer-brandline {
+    font-size: 1.18rem !important;
+  }
+
+  .hv-footer-logo {
+    width: 170px !important;
+    max-width: 100%;
+    height: 64px !important;
+  }
+
+  .hv-footer-contact-link {
+    max-width: 100%;
+  }
+
+  .hv-footer-bottom {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    padding-bottom: 8px;
+  }
+
+  .hv-footer-bottom > div,
+  .hv-footer-bottom > .MuiStack-root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .hv-footer-bottom .MuiStack-root {
+    align-items: flex-start !important;
+  }
+
+  .hv-footer-small-link {
+    max-width: 100%;
+  }
+
+
+  /* Mobile header stays inside the viewport. */
+  .hv-public-nav .MuiStack-root {
+    min-width: 0;
+  }
+
+  .hv-public-nav .hv-logo {
+    max-width: 138px;
+  }
+
+  .hv-public-nav .hv-icon-button {
+    flex: 0 0 42px;
+  }
+
+
+  /* Mobile drawer cannot exceed viewport width. */
+  .hv-mobile-drawer {
+    width: min(360px, 88vw) !important;
+    max-width: 88vw !important;
+  }
+}
+
+
+/* ----------------------------------------------------------------
+   Very small devices
+   ---------------------------------------------------------------- */
+@media (max-width: 380px) {
+  .hv-public-nav .MuiContainer-root {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .hv-footer .MuiContainer-root {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .hv-public-nav .hv-logo {
+    width: 124px !important;
+  }
+
+  .hv-public-nav .hv-icon-button {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+  }
+
+  .hv-mobile-drawer {
+    width: 90vw !important;
+    max-width: 90vw !important;
+  }
+}
+
+
+/* ----------------------------------------------------------------
+   Desktop-site mode on a phone:
+   Never allow accidental horizontal overflow to become a giant
+   white strip. The browser viewport remains the authority.
+   ---------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .MuiContainer-root {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .MuiGrid-root {
+    min-width: 0;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    max-width: 100%;
+  }
+}
+
+
+/* ----------------------------------------------------------------
+   Reduced motion
+   ---------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hv-public-nav .hv-icon-button,
+  .hv-footer-social,
+  .hv-mobile-drawer .MuiButton-root {
+    transition: none !important;
+  }
 }

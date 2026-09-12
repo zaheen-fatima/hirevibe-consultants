@@ -5,5 +5,6 @@ public enum StorageCategory {
     RESUMES,
     ARTICLE_IMAGES,
     VIDEO_THUMBNAILS,
+    VIDEO_FILES,
     GENERAL
 }
