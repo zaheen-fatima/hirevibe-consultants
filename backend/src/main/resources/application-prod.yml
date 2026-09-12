@@ -13,6 +13,9 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
 
   flyway:
     enabled: true
@@ -20,7 +23,7 @@ spring:
 
   mail:
     host: ${MAIL_HOST}
-    port: ${MAIL_PORT}
+    port: ${MAIL_PORT:587}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     properties:
@@ -46,9 +49,9 @@ app:
     max-page-size: 100
 
   storage:
-    provider: ${STORAGE_PROVIDER}
-    local-directory: ${STORAGE_LOCAL_DIRECTORY}
-    max-file-size: ${STORAGE_MAX_FILE_SIZE}
+    provider: ${STORAGE_PROVIDER:CLOUDINARY}
+    local-directory: ${STORAGE_LOCAL_DIRECTORY:/tmp/hirevibe}
+    max-file-size: ${STORAGE_MAX_FILE_SIZE:5242880}
     media-max-file-size: ${STORAGE_MEDIA_MAX_FILE_SIZE:104857600}
     allowed-resume-extensions:
       - pdf
@@ -59,13 +62,15 @@ app:
     cloud-name: ${CLOUDINARY_CLOUD_NAME}
     api-key: ${CLOUDINARY_API_KEY}
     api-secret: ${CLOUDINARY_API_SECRET}
-    root-folder: ${CLOUDINARY_ROOT_FOLDER}
-    resume-folder: ${CLOUDINARY_RESUME_FOLDER}
-    article-image-folder: ${CLOUDINARY_ARTICLE_IMAGE_FOLDER}
-    video-thumbnail-folder: ${CLOUDINARY_VIDEO_THUMBNAIL_FOLDER}
+
+    root-folder: ${CLOUDINARY_ROOT_FOLDER:hirevibe}
+    resume-folder: ${CLOUDINARY_RESUME_FOLDER:resumes}
+    article-image-folder: ${CLOUDINARY_ARTICLE_IMAGE_FOLDER:article-images}
+    video-thumbnail-folder: ${CLOUDINARY_VIDEO_THUMBNAIL_FOLDER:video-thumbnails}
     video-folder: ${CLOUDINARY_VIDEO_FOLDER:videos}
-    general-folder: ${CLOUDINARY_GENERAL_FOLDER}
-    signed-url-expiration-seconds: ${CLOUDINARY_SIGNED_URL_EXPIRATION_SECONDS}
+    general-folder: ${CLOUDINARY_GENERAL_FOLDER:general}
+
+    signed-url-expiration-seconds: ${CLOUDINARY_SIGNED_URL_EXPIRATION_SECONDS:900}
 
 server:
   forward-headers-strategy: framework
