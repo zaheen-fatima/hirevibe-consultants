@@ -1,5 +1,11 @@
 User-agent: *
+
 Allow: /
+Allow: /about
+Allow: /services
+Allow: /insights
+Allow: /contact
+Allow: /apply
 
 Disallow: /login
 Disallow: /admin/

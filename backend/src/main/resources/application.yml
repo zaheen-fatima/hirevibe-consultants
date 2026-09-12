@@ -16,7 +16,7 @@ security:
     refresh-cleanup-interval: ${JWT_REFRESH_CLEANUP_INTERVAL:3600000}
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${SERVER_PORT}
 
   error:
     include-message: never
