@@ -42,11 +42,11 @@ import { reviewsApi } from '../../services/backend';
 const HIREVIBE_PHONE = '9205364608';
 
 const SOCIAL_LINKS = {
-    linkedin: 'https://www.linkedin.com/',
-    twitter: 'https://x.com/',
-    facebook: 'https://www.facebook.com/',
-    instagram: 'https://www.instagram.com/',
-    whatsapp: `https://wa.me/91${HIREVIBE_PHONE}`,
+    linkedin: 'https://www.linkedin.com/company/145020048/admin/dashboard/',
+    twitter: 'https://x.com/CareerHireVibe ',
+    facebook: 'https://www.facebook.com/share/19aDp74Wui/',
+    instagram: 'https://www.instagram.com/hirevibeconsultants/',
+    whatsapp: `https://whatsapp.com/channel/0029Vb8ypHUGE56kpCuh5y2Q`,
 } as const;
 
 const navItems = [
