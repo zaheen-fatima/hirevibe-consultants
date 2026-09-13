@@ -90,7 +90,7 @@ function RouteSeo() {
         <Seo
             title="Careers & Open Opportunities"
             description="Explore current career opportunities with HireVibe Consultants and take your next professional step."
-            canonical="/#open-roles"
+            canonical="/"
         />
     );
   }

@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent, type ReactNode } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Alert, Box, Button, Container, Grid, InputAdornment, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, BriefcaseBusiness, Check, Mail, MapPin, MessageCircle, Send, Target, UsersRound } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { articlesApi, contactsApi, jobsApi, videosApi } from '../../services/backend';
 import type { Job } from '../../types/api';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -35,6 +35,8 @@ const process = [
   ['04', 'Support the move', 'Candidate engagement continues through selection, documentation and the joining stage.'],
 ] as const;
 
+
+
 export function CandidateHomePage() {
   const reduce = Boolean(useReducedMotion());
   const [search, setSearch] = useState('');
@@ -43,6 +45,54 @@ export function CandidateHomePage() {
   const [heroText, setHeroText] = useState('');
   const phraseIndexRef = useRef(0);
   const contact = useContactForm();
+
+  const routeLocation = useLocation();
+
+  const handleHomeHashNavigation = (
+      event: ReactMouseEvent<HTMLAnchorElement>,
+  ) => {
+    const targetPath = '/';
+    const targetHash = '#open-roles';
+
+    const currentPath = routeLocation.pathname;
+    const currentHash = routeLocation.hash;
+
+    // Allow React Router to handle navigation when we are not already
+    // on the exact target URL.
+    if (currentPath !== targetPath || currentHash !== targetHash) {
+      return;
+    }
+
+    // We are already on /#open-roles, so prevent a redundant navigation
+    // and perform the scroll ourselves.
+    event.preventDefault();
+
+    const targetElement = document.getElementById('open-roles');
+
+    if (!targetElement) {
+      return;
+    }
+
+    const header = document.querySelector('.hv-public-nav');
+
+    const offset =
+        header instanceof HTMLElement
+            ? header.offsetHeight + 18
+            : 96;
+
+    const top =
+        targetElement.getBoundingClientRect().top +
+        window.scrollY -
+        offset;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      left: 0,
+      behavior: 'smooth',
+    });
+  };
+
+
 
   useEffect(() => {
     if (reduce) { setHeroText(heroLines[0]); return; }
@@ -66,7 +116,11 @@ export function CandidateHomePage() {
   const types = useMemo(() => Array.from(new Set(roles.map((job) => job.type).filter(Boolean))).slice(0, 6), [roles]);
 
   return <PublicLayout>
-    <HeroSection line={heroText} reduce={reduce} />
+    <HeroSection
+        line={heroText}
+        reduce={reduce}
+        onHomeHashNavigation={handleHomeHashNavigation}
+    />
     <main>
       <section className="hv-section hv-journey-section">
         <Container maxWidth="xl">
@@ -75,13 +129,36 @@ export function CandidateHomePage() {
         </Container>
       </section>
 
-      <section className="hv-statement-section"><Container maxWidth="xl"><Reveal reduce={reduce}><Box className="hv-statement-block"><Typography className="hv-section-eyebrow">AMBITION, WITH DIRECTION</Typography><SplitRevealText text="Don't just chase a job. Move your story forward." className="hv-statement-title" reduce={reduce} /><Typography className="hv-statement-copy">The strongest career moves are rarely accidental. They start with a clear sense of where you can contribute, what you want to learn and which opportunity deserves your energy.</Typography><Stack direction={{ xs: 'column', sm: 'row' }} gap={1.2} sx={{ mt: 3.5 }}><Button component={Link} to="/#open-roles" variant="contained" endIcon={<ArrowRight size={17} />}>Explore the possibilities</Button><Button component={Link} to="/insights" variant="text">Sharpen your edge</Button></Stack></Box></Reveal></Container></section>
+      <section className="hv-statement-section"><Container maxWidth="xl"><Reveal reduce={reduce}><Box className="hv-statement-block"><Typography className="hv-section-eyebrow">AMBITION, WITH DIRECTION</Typography><SplitRevealText text="Don't just chase a job. Move your story forward." className="hv-statement-title" reduce={reduce} /><Typography className="hv-statement-copy">The strongest career moves are rarely accidental. They start with a clear sense of where you can contribute, what you want to learn and which opportunity deserves your energy.</Typography><Stack direction={{ xs: 'column', sm: 'row' }} gap={1.2} sx={{ mt: 3.5 }}><Button
+          component={Link}
+          to="/#open-roles"
+          onClick={handleHomeHashNavigation}         variant="contained"
+          endIcon={<ArrowRight size={17} />}
+      >
+        Explore the possibilities
+      </Button><Button component={Link} to="/insights" variant="text">Sharpen your edge</Button></Stack></Box></Reveal></Container></section>
 
       <section className="hv-section hv-about-section"><Container maxWidth="xl"><Grid container spacing={{ xs: 4, md: 9 }} alignItems="center"><Grid size={{ xs: 12, md: 5 }}><Reveal reduce={reduce} y={30}><Typography className="hv-section-eyebrow">ABOUT HIREVIBE</Typography><SplitRevealText text="Connecting Talent with Opportunities" className="hv-section-title" reduce={reduce} /></Reveal></Grid><Grid size={{ xs: 12, md: 7 }}><Reveal reduce={reduce} delay={.06} y={30}><Typography className="hv-section-copy hv-about-copy">HireVibe Consultants provides tailored recruitment solutions, aligning the right talent with the right opportunities while keeping the experience clear, thoughtful and human for employers and professionals.</Typography><Button component={Link} to="/about" className="hv-inline-arrow" endIcon={<ArrowRight size={16} />} sx={{ mt: 2.5, px: 0 }}>Discover HireVibe</Button></Reveal></Grid></Grid><Box className="hv-about-visual" sx={{ mt: { xs: 5, md: 8 } }}><Box className="hv-about-visual-copy"><Typography className="hv-kicker">RIGHT PEOPLE. REAL OPPORTUNITIES.</Typography><Typography>Human judgement, structured process and a clear direction.</Typography></Box></Box></Container></section>
 
       <section className="hv-section hv-services-section"><Container maxWidth="xl"><SectionIntro eyebrow="WHAT WE DO" title="Tailored Recruitment Solutions" description="Looking for top-tier talent without the stress and guesswork? We deliver customized, efficient, and results-driven hiring solutions tailored to your unique business needs. From sourcing and screening to onboarding, we streamline the entire recruitment process—so you can focus on growth. We connect you with the right talent through customized strategies built around your unique hiring needs." reduce={reduce} /><Grid container spacing={2.2} sx={{ mt: 3.5 }}>{services.map((service, index) => <Grid key={service.title} size={{ xs: 12, md: 6 }}><Reveal reduce={reduce} delay={index * .08}><GlassCard className="hv-service-card" sx={{ p: 0, overflow: 'hidden' }}><Box className="hv-service-media" sx={{ backgroundImage: `linear-gradient(180deg, rgba(6,10,14,.02), rgba(6,10,14,.58)), url(${service.image})` }}><Box className="hv-service-media-label">0{index + 1}</Box></Box><Stack sx={{ p: { xs: 2.6, md: 3.2 } }} gap={1}><Typography className="hv-card-title">{service.title}</Typography><Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>{service.text}</Typography><Button component={Link} to={service.to} sx={{ alignSelf: 'flex-start', px: 0, mt: .4 }} endIcon={<ArrowRight size={15} />}>{service.action}</Button></Stack></GlassCard></Reveal></Grid>)}</Grid></Container></section>
 
-      <section className="hv-section hv-roles-section" id="open-roles"><Container maxWidth="xl"><Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ md: 'end' }} gap={2}><SectionIntro eyebrow="OPEN ROLES" title="Find work worth moving for" description="Search current opportunities by role, location and work type." reduce={reduce} /><Button component={Link} to="/#open-roles" endIcon={<ArrowRight size={16} />}>View all roles</Button></Stack><GlassCard className="hv-search-panel" sx={{ mt: 3, p: { xs: 2, md: 2.2 } }}><Grid container spacing={1.3} alignItems="center"><Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Search roles" value={search} onChange={(e) => setSearch(e.target.value)} slotProps={{ input: { startAdornment: <InputAdornment position="start"><BriefcaseBusiness size={16} /></InputAdornment> } }} /></Grid><Grid size={{ xs: 12, sm: 6, md: 3 }}><TextField fullWidth label="Location" value={location} onChange={(e) => setLocation(e.target.value)} slotProps={{ input: { startAdornment: <InputAdornment position="start"><MapPin size={16} /></InputAdornment> } }} /></Grid><Grid size={{ xs: 12, sm: 6, md: 3 }}><TextField select fullWidth label="Work type" value={type} onChange={(e) => setType(e.target.value)}>{types.map((value) => <MenuItem key={value} value={value}>{value}</MenuItem>)}<MenuItem value="">All types</MenuItem></TextField></Grid><Grid size={{ xs: 12, md: 2 }}><Button component={Link} to="/#open-roles" fullWidth variant="contained" endIcon={<ArrowRight size={16} />} sx={{ minHeight: 40 }}>Explore roles</Button></Grid></Grid></GlassCard><Grid container spacing={1.7} sx={{ mt: 2.2 }}>{roles.slice(0, 3).map((job, index) => <Grid key={job.id} size={{ xs: 12, md: 4 }}><RoleCard job={job} index={index} reduce={reduce} /></Grid>)}{!jobs.isLoading && roles.length === 0 && <Grid size={{ xs: 12 }}><GlassCard sx={{ p: 3 }}><Typography color="text.secondary">Current roles will appear here automatically when published by the recruitment team.</Typography></GlassCard></Grid>}</Grid></Container></section>
+      <section className="hv-section hv-roles-section" id="open-roles"><Container maxWidth="xl"><Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ md: 'end' }} gap={2}><SectionIntro eyebrow="OPEN ROLES" title="Find work worth moving for" description="Search current opportunities by role, location and work type." reduce={reduce} /><Button
+          component={Link}
+          to="/#open-roles"
+          onClick={handleHomeHashNavigation}
+          endIcon={<ArrowRight size={16} />}
+      >
+        View all roles
+      </Button></Stack><GlassCard className="hv-search-panel" sx={{ mt: 3, p: { xs: 2, md: 2.2 } }}><Grid container spacing={1.3} alignItems="center"><Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Search roles" value={search} onChange={(e) => setSearch(e.target.value)} slotProps={{ input: { startAdornment: <InputAdornment position="start"><BriefcaseBusiness size={16} /></InputAdornment> } }} /></Grid><Grid size={{ xs: 12, sm: 6, md: 3 }}><TextField fullWidth label="Location" value={location} onChange={(e) => setLocation(e.target.value)} slotProps={{ input: { startAdornment: <InputAdornment position="start"><MapPin size={16} /></InputAdornment> } }} /></Grid><Grid size={{ xs: 12, sm: 6, md: 3 }}><TextField select fullWidth label="Work type" value={type} onChange={(e) => setType(e.target.value)}>{types.map((value) => <MenuItem key={value} value={value}>{value}</MenuItem>)}<MenuItem value="">All types</MenuItem></TextField></Grid><Grid size={{ xs: 12, md: 2 }}><Button
+          component={Link}
+          to="/#open-roles"
+          onClick={handleHomeHashNavigation} fullWidth
+          variant="contained"
+          endIcon={<ArrowRight size={16} />}
+          sx={{ minHeight: 40 }}
+      >
+        Explore roles
+      </Button></Grid></Grid></GlassCard><Grid container spacing={1.7} sx={{ mt: 2.2 }}>{roles.slice(0, 3).map((job, index) => <Grid key={job.id} size={{ xs: 12, md: 4 }}><RoleCard job={job} index={index} reduce={reduce} /></Grid>)}{!jobs.isLoading && roles.length === 0 && <Grid size={{ xs: 12 }}><GlassCard sx={{ p: 3 }}><Typography color="text.secondary">Current roles will appear here automatically when published by the recruitment team.</Typography></GlassCard></Grid>}</Grid></Container></section>
 
       <section className="hv-section hv-process-section"><Container maxWidth="xl"><SectionIntro eyebrow="HOW IT WORKS" title="A clear process from first conversation to next move" description="Structured enough to stay efficient. Human enough to stay useful." reduce={reduce} /><Grid container spacing={1.6} sx={{ mt: 3 }}>{process.map(([number, title, text], index) => <Grid key={number} size={{ xs: 12, sm: 6, md: 3 }}><Reveal reduce={reduce} delay={index * .06}><GlassCard className="hv-process-card" sx={{ minHeight: 250, p: 2.8 }}><Typography className="hv-process-number">{number}</Typography><Typography className="hv-card-title" sx={{ mt: 3 }}>{title}</Typography><Typography color="text.secondary" sx={{ mt: 1, lineHeight: 1.75 }}>{text}</Typography></GlassCard></Reveal></Grid>)}</Grid></Container></section>
 
@@ -128,7 +205,25 @@ function useContactForm() {
   };
 }
 
-function HeroSection({ line, reduce }: { line: string; reduce: boolean }) { return <Box className="hv-hero"><Box className="hv-hero-photo" /><Box className="hv-hero-overlay" /><Box className="hv-hero-grid" /><Container maxWidth="xl" className="hv-hero-content"><Grid container spacing={{ xs: 4, md: 8 }} alignItems="end"><Grid size={{ xs: 12, md: 8 }}><Reveal reduce={reduce} y={32}><Box><Typography className="hv-hero-kicker">PEOPLE · OPPORTUNITY · GROWTH</Typography><HireVibeMark /><Typography component="h1" className="hv-hero-title"><span className="hv-hero-type">{line || '\u00a0'}</span><span className="hv-type-cursor" aria-hidden="true" /></Typography><Typography className="hv-hero-copy">Right people. Real opportunities. Better career moves.</Typography><Stack direction={{ xs: 'column', sm: 'row' }} gap={1.2} className="hv-hero-actions"><Button component={Link} to="/#open-roles" variant="contained" size="large" endIcon={<ArrowRight size={17} />}>Explore</Button><Button component={Link} to="/apply" variant="outlined" size="large">Apply now</Button></Stack><Box className="hv-hero-note"><span><Check size={15} /> Executive search</span><span><Check size={15} /> Talent assessment</span><span><Check size={15} /> Workforce planning</span></Box></Box></Reveal></Grid><Grid size={{ xs: 12, md: 4 }}><Reveal reduce={reduce} y={18}><HeroConstellation /></Reveal></Grid></Grid></Container></Box>; }
+function HeroSection({
+                       line,
+                       reduce,
+                       onHomeHashNavigation,
+                     }: {
+  line: string;
+  reduce: boolean;
+  onHomeHashNavigation: (
+      event: ReactMouseEvent<HTMLAnchorElement>,
+  ) => void;
+}) {return <Box className="hv-hero"><Box className="hv-hero-photo" /><Box className="hv-hero-overlay" /><Box className="hv-hero-grid" /><Container maxWidth="xl" className="hv-hero-content"><Grid container spacing={{ xs: 4, md: 8 }} alignItems="end"><Grid size={{ xs: 12, md: 8 }}><Reveal reduce={reduce} y={32}><Box><Typography className="hv-hero-kicker">PEOPLE · OPPORTUNITY · GROWTH</Typography><HireVibeMark /><Typography component="h1" className="hv-hero-title"><span className="hv-hero-type">{line || '\u00a0'}</span><span className="hv-type-cursor" aria-hidden="true" /></Typography><Typography className="hv-hero-copy">Right people. Real opportunities. Better career moves.</Typography><Stack direction={{ xs: 'column', sm: 'row' }} gap={1.2} className="hv-hero-actions"><Button
+    component={Link}
+    to="/#open-roles"
+    onClick={onHomeHashNavigation}    variant="contained"
+    size="large"
+    endIcon={<ArrowRight size={17} />}
+>
+  Explore
+</Button><Button component={Link} to="/apply" variant="outlined" size="large">Apply now</Button></Stack><Box className="hv-hero-note"><span><Check size={15} /> Executive search</span><span><Check size={15} /> Talent assessment</span><span><Check size={15} /> Workforce planning</span></Box></Box></Reveal></Grid><Grid size={{ xs: 12, md: 4 }}><Reveal reduce={reduce} y={18}><HeroConstellation /></Reveal></Grid></Grid></Container></Box>; }
 
 function HireVibeMark() { return <Box className="hv-script-mark" aria-label="HireVibe"><span>Hire</span><b>Vibe</b><i className="hv-mark-plane">➤</i></Box>; }
 function HeroConstellation() { return <Box className="hv-hero-art" aria-hidden="true"><Box className="hv-hero-art-ring hv-ring-one" /><Box className="hv-hero-art-ring hv-ring-two" /><Box className="hv-hero-art-line hv-line-one" /><Box className="hv-hero-art-line hv-line-two" /><Box className="hv-paper-plane">➤</Box><Box className="hv-hero-chip hv-chip-one"><UsersRound size={17} /><span>Talent</span></Box><Box className="hv-hero-chip hv-chip-two"><Target size={17} /><span>Fit</span></Box><Box className="hv-hero-chip hv-chip-three"><BriefcaseBusiness size={17} /><span>Opportunity</span></Box></Box>; }
