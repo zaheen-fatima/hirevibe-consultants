@@ -9,6 +9,7 @@ import { articlesApi } from '../../services/backend';
 import { PublicLayout } from '../../components/public/PublicSite';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { Seo } from '../../components/seo/Seo';
+import { ArticleContent } from "../../components/ArticleContent";
 
 export function PublicArticlePage() {
   const { slug = '' } = useParams<{ slug: string }>();
@@ -42,7 +43,15 @@ export function PublicArticlePage() {
       <MotionDiv initial={reduce ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55 }}>
         <Stack gap={2.2}><Chip icon={<BookOpen size={15} />} label={article.category} color="primary" variant="outlined" sx={{ width: 'fit-content', fontWeight: 800 }} /><Typography variant="h1" sx={{ fontSize: { xs: '2.6rem', md: '4.6rem' }, lineHeight: 1.02 }}>{article.title}</Typography><Typography variant="h6" color="text.secondary" sx={{ lineHeight: 1.6 }}>{article.excerpt}</Typography><Stack direction="row" gap={1} alignItems="center" color="text.secondary"><Clock3 size={15} /><Typography variant="body2">Published {article.publishedAt ? new Date(article.publishedAt).toLocaleDateString() : 'recently'}</Typography></Stack></Stack>
         {article.featuredImage && <Box component="img" src={article.featuredImage} alt="" sx={{ width: '100%', maxHeight: 430, objectFit: 'cover', borderRadius: 4, mt: 4 }} />}
-        <GlassCard sx={{ mt: 4, p: { xs: 2.5, md: 4 }, borderRadius: 4 }}><Typography component="div" sx={{ whiteSpace: 'pre-wrap', lineHeight: 1.9, fontSize: '1.05rem' }}>{article.content}</Typography></GlassCard>
+        <GlassCard
+            sx={{
+              mt: 4,
+              p: { xs: 2.5, md: 4 },
+              borderRadius: 4,
+            }}
+        >
+          <ArticleContent content={article.content} />
+        </GlassCard>
         <Divider sx={{ my: 5 }} />
         <Button component={Link} to="/#open-roles" variant="contained" endIcon={<ArrowRight size={17} />}>Explore opportunities</Button>
       </MotionDiv>

@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Alert, Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, Stack, TextField, Tooltip, Typography } from '@mui/material';
 import { FileText, Eye, Pencil, Plus, Trash2, X, Send, Undo2, Search, Upload } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+import { ArticleEditor } from '../../components/ArticleEditor';
 const MotionDiv = motion.create('div');
 import { articlesApi, uploadsApi } from '../../services/backend';
 import { GlassCard } from '../../components/ui/GlassCard';
@@ -319,15 +319,36 @@ export function ArticlesPage() {
               minRows={2}
           />
 
-          <TextField
-              label="Content"
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              multiline
-              minRows={12}
-              required
-              helperText="Keep content readable and candidate-focused. Rich HTML is not required by the current backend contract."
-          />
+          <Box>
+            <Typography
+                variant="body2"
+                fontWeight={600}
+                sx={{ mb: 0.8 }}
+            >
+              Content
+            </Typography>
+
+            <ArticleEditor
+                content={form.content}
+                onChange={(content) =>
+                    setForm((current) => ({
+                      ...current,
+                      content,
+                    }))
+                }
+            />
+
+            <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{
+                  display: 'block',
+                  mt: 0.8,
+                }}
+            >
+              Format your article using headings, bold, italic, lists, quotes and links.
+            </Typography>
+          </Box>
 
           {error && <Alert severity="error">{error}</Alert>}
         </Stack>
