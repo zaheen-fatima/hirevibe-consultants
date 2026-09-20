@@ -1,18 +1,24 @@
 package com.hirevibe.backend.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.Map;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class EmailService {
 
-    private final JavaMailSender mailSender;
+    private final WebClient webClient;
+
+    @Value("${RESEND_API_KEY}")
+    private String resendApiKey;
+
+    @Value("${RESEND_API_URL:https://api.resend.com/emails}")
+    private String resendApiUrl;
 
     @Value("${MAIL_FROM_ADDRESS}")
     private String fromAddress;
@@ -20,12 +26,19 @@ public class EmailService {
     @Value("${MAIL_HR_RECIPIENT}")
     private String hrRecipient;
 
-    /**
-     * Sends a plain-text email.
-     *
-     * Email delivery failures are logged and do not cause an already
-     * persisted business operation to fail or roll back.
-     */
+    @Value("${APP_FRONTEND_URL:https://hirevibe.in}")
+    private String websiteUrl;
+
+    private static final String LOGO_URL =
+            "https://hirevibe.in/hirevibe-logo-transparent.png";
+
+    public EmailService(
+            WebClient.Builder webClientBuilder
+    ) {
+        this.webClient = webClientBuilder.build();
+    }
+
+
     public boolean sendEmail(
             String to,
             String subject,
@@ -38,21 +51,49 @@ public class EmailService {
             return false;
         }
 
+        if (resendApiKey == null || resendApiKey.isBlank()) {
+            log.error(
+                    "Skipping email because RESEND_API_KEY is not configured."
+            );
+            return false;
+        }
+
+        if (fromAddress == null || fromAddress.isBlank()) {
+            log.error(
+                    "Skipping email because MAIL_FROM_ADDRESS is not configured."
+            );
+            return false;
+        }
+
         try {
-            SimpleMailMessage message =
-                    new SimpleMailMessage();
+            String htmlBody = buildHtmlEmail(body);
 
-            message.setFrom(fromAddress);
-            message.setTo(to);
-            message.setSubject(subject);
-            message.setText(body);
+            Map<String, Object> requestBody = Map.of(
+                    "from", fromAddress,
+                    "to", to,
+                    "subject", subject,
+                    "html", htmlBody,
+                    "text", body
+            );
 
-            mailSender.send(message);
+            String response = webClient
+                    .post()
+                    .uri(resendApiUrl)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .header(
+                            "Authorization",
+                            "Bearer " + resendApiKey
+                    )
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
 
             log.info(
-                    "Email sent successfully to {} with subject '{}'",
+                    "Email sent successfully to {} with subject '{}'. Provider response: {}",
                     to,
-                    subject
+                    subject,
+                    response
             );
 
             return true;
@@ -67,6 +108,194 @@ public class EmailService {
 
             return false;
         }
+    }
+
+
+    private String buildHtmlEmail(String body) {
+
+        String formattedBody = escapeHtml(body)
+                .replace("\r\n", "\n")
+                .replace("\n\n", "</p><p>")
+                .replace("\n", "<br>");
+
+        return """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport"
+                          content="width=device-width, initial-scale=1.0">
+                    <title>HireVibe Consultants</title>
+                </head>
+
+                <body style="
+                    margin:0;
+                    padding:0;
+                    background:#f5f7fa;
+                    font-family:Arial,Helvetica,sans-serif;
+                    color:#1f2937;
+                ">
+
+                    <table
+                        width="100%%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        style="background:#f5f7fa;padding:32px 16px;"
+                    >
+                        <tr>
+                            <td align="center">
+
+                                <table
+                                    width="100%%"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    border="0"
+                                    style="
+                                        max-width:640px;
+                                        background:#ffffff;
+                                        border:1px solid #e5e7eb;
+                                        border-radius:12px;
+                                        overflow:hidden;
+                                    "
+                                >
+
+                                    <!-- Header -->
+                                    <tr>
+                                        <td style="
+                                            padding:28px 32px;
+                                            border-bottom:1px solid #eef0f3;
+                                        ">
+
+                                            <img
+                                                src="%s"
+                                                alt="HireVibe Consultants"
+                                                width="170"
+                                                style="
+                                                    display:block;
+                                                    width:170px;
+                                                    max-width:100%%;
+                                                    height:auto;
+                                                    border:0;
+                                                "
+                                            />
+
+                                        </td>
+                                    </tr>
+
+                                    <!-- Content -->
+                                    <tr>
+                                        <td style="
+                                            padding:32px;
+                                            font-size:15px;
+                                            line-height:1.7;
+                                        ">
+
+                                            <p style="
+                                                margin:0;
+                                            ">
+                                                %s
+                                            </p>
+
+                                        </td>
+                                    </tr>
+
+                                    <!-- Footer -->
+                                    <tr>
+                                        <td style="
+                                            padding:24px 32px 28px;
+                                            border-top:1px solid #e5e7eb;
+                                            background:#fafbfc;
+                                        ">
+
+                                            <p style="
+                                                margin:0 0 4px;
+                                                font-size:14px;
+                                                line-height:1.6;
+                                                color:#374151;
+                                            ">
+                                                Regards,
+                                            </p>
+
+                                            <p style="
+                                                margin:0;
+                                                font-size:15px;
+                                                line-height:1.6;
+                                                font-weight:600;
+                                                color:#111827;
+                                            ">
+                                                HireVibe Consultants
+                                            </p>
+
+                                            <p style="
+                                                margin:12px 0 0;
+                                                font-size:13px;
+                                                line-height:1.6;
+                                                color:#6b7280;
+                                            ">
+
+                                                <a
+                                                    href="%s"
+                                                    style="
+                                                        color:#374151;
+                                                        text-decoration:none;
+                                                    "
+                                                >
+                                                    %s
+                                                </a>
+
+                                                <span style="padding:0 8px;">
+                                                    |
+                                                </span>
+
+                                                <a
+                                                    href="mailto:%s"
+                                                    style="
+                                                        color:#374151;
+                                                        text-decoration:none;
+                                                    "
+                                                >
+                                                    %s
+                                                </a>
+
+                                            </p>
+
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                </body>
+                </html>
+                """.formatted(
+                LOGO_URL,
+                formattedBody,
+                websiteUrl,
+                websiteUrl,
+                fromAddress,
+                fromAddress
+        );
+    }
+
+    /**
+     * Escapes user-provided text before placing it inside HTML.
+     */
+    private String escapeHtml(String value) {
+
+        if (value == null) {
+            return "";
+        }
+
+        return value
+                .replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#39;");
     }
 
     public void sendContactReceived(
@@ -87,9 +316,6 @@ public class EmailService {
                 %s
 
                 Our team will review your message and get back to you as appropriate.
-
-                Regards,
-                HireVibe Consultants
                 """.formatted(
                         name,
                         subject
@@ -115,9 +341,6 @@ public class EmailService {
                 %s
 
                 Our recruitment team will review the details and get back to you.
-
-                Regards,
-                HireVibe Consultants
                 """.formatted(
                         name,
                         subject
@@ -143,9 +366,6 @@ public class EmailService {
                 Your application has been received successfully.
 
                 Our recruitment team will review your application and contact you if your profile is shortlisted for the next stage.
-
-                Regards,
-                HireVibe Consultants
                 """.formatted(
                         name,
                         jobTitle
@@ -266,9 +486,6 @@ public class EmailService {
                 Our response:
 
                 %s
-
-                Regards,
-                HireVibe Consultants
                 """.formatted(
                         name,
                         subject,
@@ -297,9 +514,6 @@ public class EmailService {
                 Our response:
 
                 %s
-
-                Regards,
-                HireVibe Consultants
                 """.formatted(
                         name,
                         subject,
