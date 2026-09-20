@@ -2,7 +2,7 @@ spring:
   servlet:
     multipart:
       max-file-size: ${STORAGE_MEDIA_MAX_FILE_SIZE:104857600}
-      max-request-size: ${STORAGE_MEDIA_MAX_FILE_SIZE:104857600}
+      max-request-size: ${STORAGE_MEDIA_MAX_FILE_SIZE:10485760}
 
   datasource:
     url: ${DB_URL}

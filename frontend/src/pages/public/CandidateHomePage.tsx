@@ -57,14 +57,12 @@ export function CandidateHomePage() {
     const currentPath = routeLocation.pathname;
     const currentHash = routeLocation.hash;
 
-    // Allow React Router to handle navigation when we are not already
-    // on the exact target URL.
+
     if (currentPath !== targetPath || currentHash !== targetHash) {
       return;
     }
 
-    // We are already on /#open-roles, so prevent a redundant navigation
-    // and perform the scroll ourselves.
+
     event.preventDefault();
 
     const targetElement = document.getElementById('open-roles');
@@ -144,16 +142,15 @@ export function CandidateHomePage() {
 
       <section className="hv-section hv-roles-section" id="open-roles"><Container maxWidth="xl"><Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ md: 'end' }} gap={2}><SectionIntro eyebrow="OPEN ROLES" title="Find work worth moving for" description="Search current opportunities by role, location and work type." reduce={reduce} /><Button
           component={Link}
-          to="/#open-roles"
-          onClick={handleHomeHashNavigation}
+          to="/careers"
+
           endIcon={<ArrowRight size={16} />}
       >
         View all roles
       </Button></Stack><GlassCard className="hv-search-panel" sx={{ mt: 3, p: { xs: 2, md: 2.2 } }}><Grid container spacing={1.3} alignItems="center"><Grid size={{ xs: 12, md: 4 }}><TextField fullWidth label="Search roles" value={search} onChange={(e) => setSearch(e.target.value)} slotProps={{ input: { startAdornment: <InputAdornment position="start"><BriefcaseBusiness size={16} /></InputAdornment> } }} /></Grid><Grid size={{ xs: 12, sm: 6, md: 3 }}><TextField fullWidth label="Location" value={location} onChange={(e) => setLocation(e.target.value)} slotProps={{ input: { startAdornment: <InputAdornment position="start"><MapPin size={16} /></InputAdornment> } }} /></Grid><Grid size={{ xs: 12, sm: 6, md: 3 }}><TextField select fullWidth label="Work type" value={type} onChange={(e) => setType(e.target.value)}>{types.map((value) => <MenuItem key={value} value={value}>{value}</MenuItem>)}<MenuItem value="">All types</MenuItem></TextField></Grid><Grid size={{ xs: 12, md: 2 }}><Button
           component={Link}
-          to="/#open-roles"
-          onClick={handleHomeHashNavigation} fullWidth
-          variant="contained"
+          to="/careers"
+          fullWidth variant="contained"
           endIcon={<ArrowRight size={16} />}
           sx={{ minHeight: 40 }}
       >

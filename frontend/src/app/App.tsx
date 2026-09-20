@@ -18,6 +18,12 @@ const PublicArticlePage = lazy(() => import('../pages/public/PublicArticlePage')
 const PublicVideoPage = lazy(() => import('../pages/public/PublicVideoPage').then((module) => ({ default: module.PublicVideoPage })));
 const CandidateHomePage = lazy(() => import('../pages/public/CandidateHomePage').then((module) => ({ default: module.CandidateHomePage })));
 const PublicJobPage = lazy(() => import('../pages/public/PublicJobPage').then((module) => ({ default: module.PublicJobPage })));
+const PublicJobsPage = lazy(
+    () =>
+        import('../pages/public/PublicJobsPage').then((module) => ({
+          default: module.PublicJobsPage,
+        })),
+);
 const InquiriesPage = lazy(() => import('../features/inquiries/InquiriesPage').then((module) => ({ default: module.InquiriesPage })));
 const ContactsPage = lazy(() => import('../features/contacts/ContactsPage').then((module) => ({ default: module.ContactsPage })));
 const ArticlesPage = lazy(() => import('../features/articles/ArticlesPage').then((module) => ({ default: module.ArticlesPage })));
@@ -170,8 +176,7 @@ export function App() {
       <Suspense fallback={<RouteFallback />}>
         <Routes>
           <Route path="/" element={<CandidateHomePage />} />
-          <Route path="/careers" element={<CandidateHomePage />} />
-          <Route path="/careers/job/:id" element={<PublicJobPage />} />
+          <Route path="/careers" element={<PublicJobsPage />} />          <Route path="/careers/job/:id" element={<PublicJobPage />} />
           <Route path="/insights" element={<ContentHubPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />

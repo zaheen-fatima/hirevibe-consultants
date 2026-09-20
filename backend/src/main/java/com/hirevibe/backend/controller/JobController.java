@@ -110,6 +110,14 @@ public class JobController {
                 )
         );
     }
+    @GetMapping("/public/{id}")
+    public ResponseEntity<JobResponse> getPublicJobById(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(
+                jobService.getPublicJobById(id)
+        );
+    }
 
     @Operation(
             summary = "Get job by ID",

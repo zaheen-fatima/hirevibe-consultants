@@ -18,7 +18,12 @@ export function PublicJobPage() {
   const reduce = useReducedMotion();
   const [applyOpen, setApplyOpen] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '', qualification: '', resume: null as File | null });
-  const query = useQuery({ queryKey: ['public-job-detail', id], queryFn: async () => { const page = await jobsApi.publicList({ size: 100 }); return page.content.find((job) => String(job.id) === id) ?? null; }, enabled: Boolean(id), staleTime: 60_000 });
+  const query = useQuery({
+    queryKey: ['public-job-detail', id],
+    queryFn: () => jobsApi.getPublicById(Number(id)),
+    enabled: Boolean(id) && Number.isInteger(Number(id)),
+    staleTime: 60_000,
+  });
   const mutation = useMutation({ mutationFn: async () => { if (!query.data || !form.resume) throw new Error('Missing application data'); const data = new FormData(); data.append('jobId', String(query.data.id)); data.append('name', form.name.trim()); data.append('email', form.email.trim()); data.append('phone', form.phone.trim()); data.append('qualification', form.qualification.trim()); data.append('resume', form.resume); return applicationsApi.create(data); }, onSuccess: () => setForm({ name: '', email: '', phone: '', qualification: '', resume: null }) });
   const job = query.data;
   const summary = useMemo(() => job ? jobSummary(job) : '', [job]);

@@ -102,6 +102,26 @@ public class JobService {
         return jobMapper.toResponse(findJob(id));
     }
 
+    @Transactional(readOnly = true)
+    public JobResponse getPublicJobById(Long id) {
+
+        Job job = jobRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Job not found with ID: " + id
+                        )
+                );
+
+        if (!job.isActive()) {
+            throw new ResourceNotFoundException(
+                    "Job not found with ID: " + id
+            );
+        }
+
+        return jobMapper.toResponse(job);
+    }
+
     @Transactional
     @PreAuthorize("hasAuthority('JOB_UPDATE')")
     public JobResponse updateJob(

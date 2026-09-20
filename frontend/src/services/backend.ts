@@ -33,6 +33,8 @@ export const dashboardApi = {
 export const jobsApi = {
   list: async (params?: QueryParams) => (await api.get<PageResponse<Job>>('/jobs', { params })).data,
   publicList: async (params?: QueryParams) => safePublicPage(api.get<PageResponse<Job>>('/jobs/public', { params }), Number(params?.size ?? 0)),
+  getPublicById: async (id: number) =>
+      (await api.get<Job>(`/jobs/public/${id}`)).data,
   get: async (id: number) => (await api.get<Job>(`/jobs/${id}`)).data,
   create: async (payload: Omit<Job, 'id' | 'active' | 'createdAt' | 'updatedAt'>) => (await api.post<Job>('/jobs', payload)).data,
   update: async (id: number, payload: Partial<Pick<Job, 'title' | 'location' | 'description' | 'type'>>) => (await api.put<Job>(`/jobs/${id}`, payload)).data,

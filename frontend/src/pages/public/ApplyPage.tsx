@@ -65,7 +65,17 @@ export function ApplyPage() {
                   <MenuItem value="">Select a current opening</MenuItem>
                   {roleOptions.map((job) => <MenuItem key={job.id} value={job.id}>{job.title} · {job.location}</MenuItem>)}
                 </TextField>
-                {selectedJob && <Box sx={{ p: 2, borderRadius: 2.5, bgcolor: 'action.hover', border: '1px solid', borderColor: 'divider' }}><Stack direction="row" gap={1} alignItems="center"><MapPin size={15} /><Typography variant="body2">{selectedJob.location}</Typography><Typography variant="body2" color="text.secondary">· {selectedJob.type}</Typography></Stack><Typography variant="body2" color="text.secondary" sx={{ mt: .7 }}>{selectedJob.description}</Typography></Box>}
+                {selectedJob && <Box sx={{ p: 2, borderRadius: 2.5, bgcolor: 'action.hover', border: '1px solid', borderColor: 'divider' }}><Stack direction="row" gap={1} alignItems="center"><MapPin size={15} /><Typography variant="body2">{selectedJob.location}</Typography><Typography variant="body2" color="text.secondary">· {selectedJob.type}</Typography></Stack><Typography variant="body2" color="text.secondary" sx={{ mt: .7 }}>{selectedJob.description}</Typography><Button
+                    component={Link}
+                    to={`/careers/job/${selectedJob.id}`}
+                    endIcon={<ArrowRight size={15} />}
+                    sx={{
+                      mt: 1.2,
+                      px: 0,
+                    }}
+                >
+                  View full role
+                </Button></Box>}
                 <Grid container spacing={1.7}>
                   <Grid size={{ xs: 12, sm: 6 }}><TextField fullWidth label="Full name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required /></Grid>
                   <Grid size={{ xs: 12, sm: 6 }}><TextField fullWidth label="Email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required /></Grid>
@@ -86,7 +96,11 @@ export function ApplyPage() {
                     setForm({ ...form, resume: file });
                   }} />
                 </Button>
-                {mutation.isError && <Alert severity="error">Application could not be submitted. Please verify the fields, role selection and backend connection.</Alert>}
+                {mutation.isError && (
+                    <Alert severity="error">
+                      {getApplicationErrorMessage(mutation.error)}
+                    </Alert>
+                )}
                 {mutation.isSuccess && <Alert severity="success">Application submitted successfully. Please keep the reference returned by the backend for your records.</Alert>}
                 <Button variant="contained" size="large" endIcon={<Send size={16} />} disabled={mutation.isPending || !jobId || !form.name || !form.email || !form.phone || !form.qualification || !form.resume} onClick={() => mutation.mutate()} sx={{ alignSelf: 'flex-start', px: 2.8, py: 1.35 }}>{mutation.isPending ? 'Submitting…' : 'Submit application'}</Button>
               </Stack>
@@ -115,7 +129,54 @@ export function ApplyPage() {
     </PublicLayout>
   );
 }
+function getApplicationErrorMessage(error: unknown): string {
+  if (
+      error &&
+      typeof error === 'object' &&
+      'response' in error
+  ) {
+    const response = (
+        error as {
+          response?: {
+            status?: number;
+            data?: {
+              message?: string;
+            };
+          };
+        }
+    ).response;
 
+    if (response?.status === 413) {
+      return 'The resume is larger than the server allows. Please upload a file up to 5 MB.';
+    }
+
+    if (response?.status === 400) {
+      return (
+          response.data?.message ||
+          'The application was rejected by the server. Please check the role and resume file.'
+      );
+    }
+
+    if (response?.status === 500) {
+      return 'The application reached the server but could not be completed. Please try again or contact HireVibe.';
+    }
+
+    if (response?.data?.message) {
+      return response.data.message;
+    }
+  }
+
+  if (
+      error &&
+      typeof error === 'object' &&
+      'message' in error &&
+      typeof error.message === 'string'
+  ) {
+    return error.message;
+  }
+
+  return 'Application could not be submitted. Please try again.';
+}
 function Step({ icon, title, text }: { icon: ReactNode; title: string; text: string }) {
   return <Stack direction="row" gap={1.4}><Box sx={{ width: 38, height: 38, borderRadius: 2, display: 'grid', placeItems: 'center', flexShrink: 0, color: 'var(--hv-accent)', bgcolor: 'rgba(200,155,60,.11)' }}>{icon}</Box><Box><Typography sx={{ fontWeight: 650 }}>{title}</Typography><Typography variant="body2" color="text.secondary" sx={{ mt: .25 }}>{text}</Typography></Box></Stack>;
 }
