@@ -2,7 +2,7 @@ import axios, { type AxiosError, type AxiosInstance, type InternalAxiosRequestCo
 import { tokenStorage } from '../lib/storage';
 import type {ChangePasswordRequest, LoginRequest, LoginResponse, RefreshTokenResponse } from '../types/api';
 
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080/api/v1';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const api: AxiosInstance = axios.create({
   baseURL: apiBaseUrl,
